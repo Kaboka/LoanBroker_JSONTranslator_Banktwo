@@ -72,7 +72,7 @@ public class JSONTransloator {
             String creditScore = xPath.compile("/LoanRequest/creditScore").evaluate(doc);
             String loanAmount = xPath.compile("/LoanRequest/loanAmount").evaluate(doc);
             String loanDuration = xPath.compile("/LoanRequest/loanDuration").evaluate(doc);
-            jsonString = "{\"ssn\":" + ssn + "," +
+            jsonString = "{\"ssn\":" + ssn.replace("-", "") + "," +
                     "\"creditScore\":" + creditScore + "," +
                     "\"loanAmount\":" + loanAmount + "," +
                     "\"loanDuration\":" + loanDuration + "}";

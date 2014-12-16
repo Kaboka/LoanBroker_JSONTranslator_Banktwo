@@ -11,6 +11,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
+import dk.cphbusiness.connection.ConnectionCreator;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,20 +34,14 @@ public class JSONTransloator {
     private static final String[] TOPICS = {"expensive.*"};
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername("student");
-        factory.setPassword("cph");
-        factory.setHost("datdb.cphbusiness.dk");
-
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        ConnectionCreator creator = ConnectionCreator.getInstance();
+        Channel channel = creator.createChannel();
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
-        
-        for(String topic: TOPICS){
-            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME,topic);
+
+        for (String topic : TOPICS) {
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, topic);
         }
-        
 
         QueueingConsumer consumer = new QueueingConsumer(channel);
         channel.basicConsume(QUEUE_NAME, true, consumer);
@@ -72,20 +67,19 @@ public class JSONTransloator {
             String creditScore = xPath.compile("/LoanRequest/creditScore").evaluate(doc);
             String loanAmount = xPath.compile("/LoanRequest/loanAmount").evaluate(doc);
             String loanDuration = xPath.compile("/LoanRequest/loanDuration").evaluate(doc);
-            jsonString = "{\"ssn\":" + ssn.replace("-", "") + "," +
-                    "\"creditScore\":" + creditScore + "," +
-                    "\"loanAmount\":" + loanAmount + "," +
-                    "\"loanDuration\":" + loanDuration + "}";
+            jsonString = "{\"ssn\":" + ssn.replace("-", "") + ","
+                    + "\"creditScore\":" + creditScore + ","
+                    + "\"loanAmount\":" + loanAmount + ","
+                    + "\"loanDuration\":" + loanDuration + "}";
 //        {"ssn":1605789787,"creditScore":598,"loanAmount":10.0,"loanDuration":360}
 //       String message = gson.toJson(new String(delivery.getBody()));
 //       System.out.println(message);
             Gson gson = new Gson();
             gson.toJson(jsonString);
-            
+
         } catch (XPathExpressionException ex) {
             Logger.getLogger(JSONTransloator.class.getName()).log(Level.SEVERE, null, ex);
         }
         return jsonString;
     }
 }
-

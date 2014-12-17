@@ -30,7 +30,7 @@ public class TranslatorBankTwo {
     private static final String EXCHANGE_NAME = "ex_translators_gr1";
     private static final String REPLY_QUEUE = "bank_two_normalizer_gr1";
     private static final String INQUEUE_NAME = "bank_two_translator_gr1";
-    private static final String[] TOPICS = {"expensive.*"};
+    private static final String[] TOPICS = {"expensive.low", "cheap.*"};
 
     public static void main(String[] args) throws IOException, InterruptedException {
         ConnectionCreator creator = ConnectionCreator.getInstance();

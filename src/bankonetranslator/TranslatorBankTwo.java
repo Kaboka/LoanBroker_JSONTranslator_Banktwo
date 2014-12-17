@@ -45,8 +45,10 @@ public class TranslatorBankTwo {
         QueueingConsumer consumer = new QueueingConsumer(channel);
         channel.basicConsume(INQUEUE_NAME, true, consumer);
         
+        System.out.println("Translator for Bank Two running");
         while (true) {
             QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+            System.out.println("Got message: " + new String(delivery.getBody()));
             System.out.println(new String(delivery.getBody()));
             String message = translateMessage(new String(delivery.getBody()));
             BasicProperties probs = new BasicProperties.Builder().replyTo(REPLY_QUEUE).correlationId("1").build(); //change to normalizer queue

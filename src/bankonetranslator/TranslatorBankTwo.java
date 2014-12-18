@@ -33,13 +33,15 @@ public class TranslatorBankTwo {
     private static final String[] TOPICS = {"expensive.low", "cheap.*"};
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        
         ConnectionCreator creator = ConnectionCreator.getInstance();
         Channel channel = creator.createChannel();
-        channel.queueDeclare(INQUEUE_NAME, false, false, false, null);
+        channel.queueDeclare(INQUEUE_NAME, true, false, false, null);
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
-
+        
         for (String topic : TOPICS) {
             channel.queueBind(INQUEUE_NAME, EXCHANGE_NAME, topic);
+           
         }
 
         QueueingConsumer consumer = new QueueingConsumer(channel);
@@ -48,6 +50,7 @@ public class TranslatorBankTwo {
         System.out.println("Translator for Bank Two running");
         while (true) {
             QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+           // channel.basicAck(delivery.getEnvelope().getDeliveryTag(), true);
             System.out.println("Got message: " + new String(delivery.getBody()));
             System.out.println(new String(delivery.getBody()));
             String message = translateMessage(new String(delivery.getBody()));

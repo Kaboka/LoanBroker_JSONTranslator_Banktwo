@@ -7,8 +7,6 @@ package bankonetranslator;
 
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 import dk.cphbusiness.connection.ConnectionCreator;
 import java.io.IOException;
@@ -30,7 +28,7 @@ public class TranslatorBankTwo {
     private static final String EXCHANGE_NAME = "ex_translators_gr1";
     private static final String REPLY_QUEUE = "bank_two_normalizer_gr1";
     private static final String INQUEUE_NAME = "bank_two_translator_gr1";
-    private static final String[] TOPICS = {"expensive.low", "cheap.*"};
+    private static final String[] TOPICS = {"expensive.high", "cheap.*"};
 
     public static void main(String[] args) throws IOException, InterruptedException {
         
